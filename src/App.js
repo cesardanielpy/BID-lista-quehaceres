@@ -1,23 +1,34 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import AgregarTarea from './Components/AgregarTarea';
+import ListaQuehacer from './Components/ListaQuehacer';
+import data from './data.json';
 
-function App() {
+
+
+const App = () => {
+
+  const [tareas, setTareas] = useState(data);
+  const onComplete = (id) => {
+    setTareas(tareas.map((tareas) => {
+      return tareas.id === Number(id) ? {...tareas, complete: !tareas.complete} : {...tareas};
+    }))
+  }
+  const borrarItem = (id) => {
+    setTareas([...tareas].filter(tareas => tareas.id !== id))
+  }
+  const addTareas = (nuevaTarea) => {
+    let nuevoItem = {id : +new Date(), task: nuevaTarea, complete: false};
+
+    setTareas([...tareas, nuevoItem]);
+  }
+
+console.log(tareas)
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Lista de quehaceres</h1>
+      <AgregarTarea addTareas = {addTareas} />
+      <ListaQuehacer tareas={tareas} onComplete={onComplete} borrarItem={borrarItem}/>
     </div>
   );
 }
